@@ -1,0 +1,69 @@
+// ============================================================
+//  ИНФОЛОГИЧЕСКАЯ (концептуальная) МОДЕЛЬ
+//  Предметная область: «Спектакли в театре»
+//  Показаны сущности, логические атрибуты и связи.
+//  Типы данных — логические (не привязаны к конкретной СУБД).
+//  Формат: DBML (dbdiagram.io)
+// ============================================================
+
+Project theater_conceptual {
+  database_type: 'PostgreSQL'
+  Note: 'Инфологическая модель БД театральных спектаклей'
+}
+
+// ---------- Сущности ----------
+
+Table Genre {
+  genre_id integer [pk, note: 'Идентификатор жанра']
+  name     varchar [note: 'Название жанра (драма, комедия, ...)']
+
+  Note: 'Справочник жанров спектаклей'
+}
+
+Table Author {
+  author_id  integer [pk]
+  full_name  varchar [note: 'ФИО автора (драматурга)']
+  country    varchar [note: 'Страна']
+  birth_year integer [note: 'Год рождения']
+}
+
+Table Performance {
+  performance_id integer [pk]
+  title          varchar [note: 'Название спектакля']
+  premiere_date  date    [note: 'Дата премьеры']
+  duration       integer [note: 'Продолжительность, мин']
+  age_limit      integer [note: 'Возрастное ограничение']
+  genre_id       integer [note: 'FK → Genre']
+  author_id      integer [note: 'FK → Author']
+}
+
+Table Actor {
+  actor_id         integer [pk]
+  full_name        varchar [note: 'ФИО актёра']
+  birth_date       date
+  experience_years integer [note: 'Стаж, лет']
+}
+
+Table Role {
+  role_id        integer [pk]
+  role_name      varchar [note: 'Название роли']
+  is_main        boolean [note: 'Главная роль?']
+  performance_id integer [note: 'FK → Performance']
+  actor_id       integer [note: 'FK → Actor']
+
+  Note: 'Ассоциативная сущность: реализует связь M:N\nмежду Performance и Actor'
+}
+
+// ---------- Связи (кардинальность в нотации вороньих лапок) ----------
+
+// Один жанр — много спектаклей
+Ref: Performance.genre_id > Genre.genre_id
+
+// Один автор — много спектаклей
+Ref: Performance.author_id > Author.author_id
+
+// Один спектакль — много ролей
+Ref: Role.performance_id > Performance.performance_id
+
+// Один актёр — много ролей
+Ref: Role.actor_id > Actor.actor_id

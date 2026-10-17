@@ -1,0 +1,63 @@
+@startuml model_conceptual
+!pragma layout smetana
+skinparam linetype ortho
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+hide circle
+hide empty members
+title Инфологическая модель БД «Спектакли в театре»
+
+entity "Жанр (Genre)" as genre {
+  * genre_id : PK
+  --
+  name
+}
+
+entity "Автор (Author)" as author {
+  * author_id : PK
+  --
+  full_name
+  country
+  birth_year
+}
+
+entity "Спектакль (Performance)" as performance {
+  * performance_id : PK
+  --
+  title
+  premiere_date
+  duration
+  age_limit
+  genre_id : FK
+  author_id : FK
+}
+
+entity "Актёр (Actor)" as actor {
+  * actor_id : PK
+  --
+  full_name
+  birth_date
+  experience_years
+}
+
+entity "Роль (Role)" as role {
+  * role_id : PK
+  --
+  role_name
+  is_main
+  performance_id : FK
+  actor_id : FK
+}
+
+genre       ||--o{ performance
+author      ||--o{ performance
+performance ||--o{ role
+actor       ||--o{ role
+
+note bottom of role
+  Роль — ассоциативная сущность,
+  реализует связь M:N
+  «Спектакль <-> Актёр»
+end note
+
+@enduml

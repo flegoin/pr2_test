@@ -1,0 +1,57 @@
+@startuml model_physical
+!pragma layout smetana
+skinparam linetype ortho
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+hide circle
+hide empty members
+title Физическая модель БД «Спектакли в театре» (PostgreSQL)
+
+entity "genre" as genre {
+  * genre_id : integer IDENTITY <<PK>>
+  --
+  name : varchar(60) <<UNIQUE>>
+}
+
+entity "author" as author {
+  * author_id : integer IDENTITY <<PK>>
+  --
+  full_name : varchar(120)
+  country : varchar(60)
+  birth_year : integer
+}
+
+entity "performance" as performance {
+  * performance_id : integer IDENTITY <<PK>>
+  --
+  title : varchar(120)
+  genre_id : integer <<FK>>
+  author_id : integer <<FK>>
+  premiere_date : date
+  duration_min : integer
+  age_limit : integer
+}
+
+entity "actor" as actor {
+  * actor_id : integer IDENTITY <<PK>>
+  --
+  full_name : varchar(120)
+  birth_date : date
+  experience_years : integer
+}
+
+entity "role" as role {
+  * role_id : integer IDENTITY <<PK>>
+  --
+  role_name : varchar(100)
+  performance_id : integer <<FK>>
+  actor_id : integer <<FK>>
+  is_main : boolean
+}
+
+genre       ||--o{ performance
+author      ||--o{ performance
+performance ||--o{ role
+actor       ||--o{ role
+
+@enduml

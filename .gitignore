@@ -1,5 +1,14 @@
+# Python
 __pycache__/
 *.py[cod]
-*.egg-info/
 .venv/
 venv/
+
+# Локальные настройки с паролем БД
+.env
+server/.env
+
+# Прочее
+*.docx
+*.tmp
+~*
